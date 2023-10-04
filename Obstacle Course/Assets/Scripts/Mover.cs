@@ -7,11 +7,16 @@ public class Mover : MonoBehaviour
     [SerializeField] float moveSpeed = 10f;
     void Start()
     {
-
+        MovePlayer();
     }
 
 
     void Update()
+    {
+
+    }
+
+    void MovePlayer()
     {
         float xValue = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
         float zValue = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
