@@ -6,7 +6,15 @@ using UnityEditor.Callbacks;
 public class CollisionHandler : MonoBehaviour
 {
     [SerializeField] float levelLoadDelay = .5f;
+    [SerializeField] AudioClip successClip;
+    [SerializeField] AudioClip crashClip;
     Rigidbody rigiBbody;
+    AudioSource audioSource;
+    bool successLevel;
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     void OnCollisionEnter(Collision other)
     {
         switch (other.gameObject.tag)
@@ -37,18 +45,26 @@ public class CollisionHandler : MonoBehaviour
     void StartSuccessSequence()
     {
         //to do add SFX
-
+        successLevel = true;
         rigiBbody = GetComponent<Rigidbody>();
         rigiBbody.freezeRotation = true;
         GetComponent<Movement>().enabled = false;
+        audioSource.Stop();
+        audioSource.PlayOneShot(successClip);
         Invoke("LoadNextLevel", levelLoadDelay);
     }
 
     void StartCrashSequence()
     {
         //to do add SFX upon crash and particle effect
-        GetComponent<Movement>().enabled = false;
-        Invoke("ReloadLevel", levelLoadDelay);
+        if (!successLevel)
+        {
+            GetComponent<Movement>().enabled = false;
+            audioSource.Stop();
+            audioSource.PlayOneShot(crashClip);
+            Invoke("ReloadLevel", levelLoadDelay);
+
+        }
 
     }
     void LoadNextLevel()
