@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Movement : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class Movement : MonoBehaviour
     [SerializeField] float mainThrust = 100f;
     [SerializeField] float rotationThrust = 1f;
     [SerializeField] AudioClip mainEngine;
+    [SerializeField] ParticleSystem rocketJetParticle;
 
     Rigidbody rb;
     AudioSource audioSource;
@@ -28,16 +30,16 @@ public class Movement : MonoBehaviour
         ProcessRotation();
     }
 
-    private void ProcessRotation()
+    void ProcessRotation()
     {
 
         if (Input.GetKey(KeyCode.A))
         {
-            ApllyRotation(rotationThrust);
+            RotateLeft();
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            ApllyRotation(-rotationThrust);
+            RotateRight();
         }
     }
 
@@ -46,19 +48,36 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rb.AddRelativeForce(Vector3.up * Time.deltaTime * mainThrust);
-            if (!audioSource.isPlaying)
-            {
-                audioSource.PlayOneShot(mainEngine);
-            }
-
+            StartThrusting();
         }
         else
         {
-            audioSource.Stop();
+            StopThrusting();
         }
+    }
 
 
+    void StartThrusting()
+    {
+        rb.AddRelativeForce(Vector3.up * Time.deltaTime * mainThrust);
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(mainEngine);
+            rocketJetParticle.Play();
+        }
+    }
+    void StopThrusting()
+    {
+        audioSource.Stop();
+        rocketJetParticle.Stop();
+    }
+    void RotateLeft()
+    {
+        ApllyRotation(rotationThrust);
+    }
+    void RotateRight()
+    {
+        ApllyRotation(-rotationThrust);
     }
     void ApllyRotation(float rotationThisFrame)
     {
