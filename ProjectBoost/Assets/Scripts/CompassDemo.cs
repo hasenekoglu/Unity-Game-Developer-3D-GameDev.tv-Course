@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Compass : MonoBehaviour
+public class CompassDemo : MonoBehaviour
 {
     [SerializeField] Transform player;
     [SerializeField] Transform target;
